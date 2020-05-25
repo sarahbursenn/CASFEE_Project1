@@ -1,0 +1,131 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
+
+/* Common */
+div {
+    margin: 0rem;
+    padding: 0rem;
+}
+
+h1 {
+    margin: 1rem 0rem 2rem 0rem;
+    font-family: "Fredericka the Great";
+    font-weight: 400;
+    font-size: 7rem;
+}
+
+
+/* Grid Layout Outer Structure */
+.div_content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 1.5rem 1fr;
+    grid-template-rows: repeat(3, auto);
+}
+
+.div_control_components {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.div_style_components {
+    grid-column: 5 / 6;
+    grid-row: 1 / 2;
+}
+
+.div_sort_components {
+    grid-column: 1 / span 3;
+    grid-row: 2 / 3;
+}
+
+.div_display_components {
+    grid-column: 5 / 6;
+    grid-row: 2 / 3;
+}
+
+.div_todo_components {
+    grid-column: 1 / span 5;
+    grid-row: 3 / 4;
+}
+
+/* Grid Layout Todos Structure */
+.div_todo {
+    display: grid;
+    grid-template-columns: 2fr 60% 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-column-gap: 1rem;
+}
+
+.div_todo_due {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.div_todo_finished {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.div_todo_header {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.div_todo_importance {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.div_todo_content {
+    grid-column: 2 / span 2;
+    grid-row: 2 / 3;
+}
+
+.div_todo_edit {
+    grid-column: 4 / 5;
+    grid-row: 1 / span 2;
+}
+
+/* Elements */
+.txt_todo_content {
+    width: 100%;
+    disabled
+}
+
+/* Icons */
+@font-face {
+    font-family: "Font Awesome 5 Free";
+    src: url("https://pro.fontawesome.com/releases/v5.10.1/webfonts/fa-solid-900.woff2");
+}
+
+.fas {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+}
+
+.fas::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 1.5rem;
+}
+
+.fa-exclamation::before {
+    content: "\f12a";
+}
+
+.fa-plus::before {
+    content: "\f067";
+}
+
+.fa-pencil::before {
+    content: "\f303";
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Todoz</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<h1>Todoz</h1>
+<div id="div_content" class="div_content">
+    <div id="div_control_components" class="div_control_components">
+        <button class="btn_new_note" id="btn_new_note" name="new_note" type="button"><span class="fas fa-plus"></span>
+        </button>
+    </div>
+
+    <div id="div_style_components" class="div_style_components">
+        <select class="slct_style" id="slct_style" name="style">
+            <option value="dark">Dark-Mode</option>
+        </select>
+    </div>
+
+    <div id="div_sort_components" class="div_sort_components">
+        <button class="btn_sort" id="btn_sort_by_finished" name="sort_by_finished" type="button">erledigt am</button>
+        <button class="btn_sort" id="btn_sort_by_created" name="sort_by_created" type="button">erstellt am</button>
+        <button class="btn_sort" id="btn_sort_importance" name="sort_by_importance" type="button">Wichtigkeit</button>
+    </div>
+
+    <div id="div_display_components" class="div_display_components">
+        <button class="btn_show" id="btn_show_finished" name="show_finished" type="button">Erledigte anzeigen</button>
+    </div>
+
+
+    <div id="div_todo_components" class="div_todo_components">
+    </div>
+</div>
+
+<!-- Handlebars Template for Todos -->
+<script id="note-entry-template" type="text/x-handlebars-template">
+    {{#each todos}}
+        <div class="div_todo">
+            <div class="div_todo_due">
+                {{dueOn}}
+            </div>
+            <div class="div_todo_finished">
+            <input name="is_finished" type="checkbox"
+                {{#if finishedOn}}
+                   checked> [{{finishedOn}}]
+                {{else}}
+                    >
+                {{/if}}
+            </div>
+            <div class="div_todo_header">
+                {{header}}
+            </div>
+            <div class="div_todo_importance">
+                <!-- TODO: register for-helper in Handlebars -->
+            </div>
+            <div class="div_todo_content">
+                <textarea class="txt_todo_content" disabled>{{todoText}}</textarea>
+            </div>
+            <div class="div_todo_edit">
+                <button name="todo_edit" type="button"><span class="fas fa-pencil"></span></button>
+            </div>
+        </div>
+    {{/each}}
+</script>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
