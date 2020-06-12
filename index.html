@@ -2,12 +2,12 @@
 <html lang="">
 <head>
     <meta charset="UTF-8">
-    <title>Todoz</title>
+    <title>Notez</title>
 
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<h1>Todoz</h1>
+<h1>Notez</h1>
 <div id="div_content" class="div_content">
     <div id="div_control_components" class="div_control_components">
         <button class="btn_new_note" id="btn_new_note" name="new_note" type="button"><span class="fas fa-plus"></span>
@@ -20,54 +20,71 @@
         </select>
     </div>
 
-    <div id="div_sort_components" class="div_sort_components">
-        <button class="btn_sort" id="btn_sort_by_finished" name="sort_by_finished" type="button">erledigt am</button>
-        <button class="btn_sort" id="btn_sort_by_created" name="sort_by_created" type="button">erstellt am</button>
-        <button class="btn_sort" id="btn_sort_importance" name="sort_by_importance" type="button">Wichtigkeit</button>
+    <div id="div_sort_components_finished" class="div_sort_components div_sort_components_finished">
+        <button id="btn_sort_by_finished" class="btn btn_sort" name="sort_by_finished" type="button">
+            <div class="btn_div_left">erledigt am</div>
+            <div id="btn_div_sort_by_finished" class="btn_div_right fas btn_sort_num_asc"></div>
+        </button>
+    </div>
+    <div id="div_sort_components_created" class="div_sort_components div_sort_components_created">
+        <button id="btn_sort_by_created" class="btn btn_sort" name="sort_by_created" type="button">
+            <div class="btn_div_left">erstellt am</div>
+                <div id="btn_div_sort_by_created" class="btn_div_right fas"></div>
+        </button>
+    </div>
+    <div id="div_sort_components_importance" class="div_sort_components div_sort_components_importance">
+        <button id="btn_sort_importance" class="btn btn_sort" name="sort_by_importance" type="button">
+            <div class="btn_div_left">Wichtigkeit</div>
+            <div id="btn_div_sort_by_importance" class="btn_div_right fas"></div>
+        </button>
     </div>
 
     <div id="div_display_components" class="div_display_components">
-        <button class="btn_show" id="btn_show_finished" name="show_finished" type="button">Erledigte anzeigen</button>
+        <button class="btn btn_show" id="btn_show_finished" name="show_finished" type="button">
+            <div class="btn_div_left">Erledigte anzeigen</div>
+            <div id="btn_div_show_finished" class="btn_div_right fas btn_show_on"></div>
+        </button>
     </div>
 
 
-    <div id="div_todo_components" class="div_todo_components">
+    <div id="div_note_components" class="div_note_components">
     </div>
 </div>
 
-<!-- Handlebars Template for Todos -->
+<!-- Handlebars Template for notes -->
 <script id="note-entry-template" type="text/x-handlebars-template">
-    {{#each todos}}
-        <div class="div_todo">
-            <div class="div_todo_due">
-                {{dueOn}}
+    {{#each notes}}
+        <div class="div_note">
+            <div class="div_note_created">
+                Erstellt am: {{formatDate createdOn}}
             </div>
-            <div class="div_todo_finished">
+            <div class="div_note_finished">
             <input name="is_finished" type="checkbox"
                 {{#if finishedOn}}
-                   checked> [{{finishedOn}}]
+                   checked> erledigt am: [{{formatDate finishedOn}}]
                 {{else}}
                     >
                 {{/if}}
             </div>
-            <div class="div_todo_header">
+            <div class="div_note_header">
                 {{header}}
             </div>
-            <div class="div_todo_importance">
-                <!-- TODO: register for-helper in Handlebars -->
+            <div class="div_note_importance">
+                {{blubber importance}}
             </div>
-            <div class="div_todo_content">
-                <textarea class="txt_todo_content" disabled>{{todoText}}</textarea>
+            <div class="div_note_content">
+                <textarea class="txt_note_content" disabled>{{noteText}}</textarea>
             </div>
-            <div class="div_todo_edit">
-                <button name="todo_edit" type="button"><span class="fas fa-pencil"></span></button>
+            <div class="div_note_edit">
+                <button name="note_edit" type="button"><span class="fas fa-pencil"></span></button>
             </div>
         </div>
     {{/each}}
 </script>
 
 <!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-<script src="script.js"></script>
+<script src="scripts/utils.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.js" defer></script>
+<script src="scripts/bootstrapper-index.js" type="module" defer></script>
 </body>
 </html>

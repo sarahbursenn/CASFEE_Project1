@@ -3,17 +3,106 @@
 
 /* Common */
 div {
-    margin: 0rem;
-    padding: 0rem;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-    margin: 1rem 0rem 2rem 0rem;
+    margin: 1rem 0 2rem 0;
     font-family: "Fredericka the Great";
     font-weight: 400;
     font-size: 7rem;
 }
 
+/* Buttons */
+.btn {
+    position: relative;
+    height: 3rem;
+    width: 95%;
+
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    padding: 1rem;
+
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.btn:hover {
+    transform: translateY(2px);
+}
+
+.btn:active {
+    transform: translateY(4px);
+}
+
+.btn_sort {
+    background: #cb4e4e;
+    box-shadow: 0 6px #ab3c3c;
+}
+
+.btn_sort:hover {
+    box-shadow: 0 4px #ab3c3c;
+}
+
+.btn_sort:active {
+    box-shadow: 0 0 #ab3c3c;
+}
+
+.btn_show {
+    background: #31796e;
+    box-shadow: 0 6px #1f5048;
+}
+
+.btn_show:hover {
+    box-shadow: 0 4px #1f5048;
+}
+
+.btn_show:active {
+    box-shadow: 0 0 #1f5048;
+}
+
+/* Buttons Sort by and Show */
+.btn_div_left {
+    display: inline-block;
+    width: 90%;
+}
+
+.btn_div_right {
+    display: inline-block;
+    width: 5%;
+    vertical-align: middle;
+}
+
+.btn_sort_num_asc::after,
+.btn_sort_num_desc::after,
+.btn_show_on::after,
+.btn_show_off::after {
+    font-size: 1.25rem !important;
+    text-align: right
+}
+
+.btn_sort_num_asc::after {
+    content: "\f162";
+}
+
+.btn_sort_num_desc::after {
+    content: "\f887";
+}
+
+.btn_show_on::after {
+    content: "\f205";
+}
+
+.btn_show_off::after {
+    content: "\f204";
+}
 
 /* Grid Layout Outer Structure */
 .div_content {
@@ -33,8 +122,20 @@ h1 {
 }
 
 .div_sort_components {
-    grid-column: 1 / span 3;
     grid-row: 2 / 3;
+    height: 150px;
+}
+
+.div_sort_components_finished {
+    grid-column: 1 / 2;
+}
+
+.div_sort_components_created {
+    grid-column: 2 / 3;
+}
+
+.div_sort_components_importance {
+    grid-column: 3 / 4;
 }
 
 .div_display_components {
@@ -42,53 +143,52 @@ h1 {
     grid-row: 2 / 3;
 }
 
-.div_todo_components {
+.div_note_components {
     grid-column: 1 / span 5;
     grid-row: 3 / 4;
 }
 
-/* Grid Layout Todos Structure */
-.div_todo {
+/* Grid Layout notes Structure */
+.div_note {
     display: grid;
     grid-template-columns: 2fr 60% 1fr 1fr;
     grid-template-rows: auto auto;
     grid-column-gap: 1rem;
 }
 
-.div_todo_due {
+.div_note_created {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
 }
 
-.div_todo_finished {
+.div_note_finished {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
 }
 
-.div_todo_header {
+.div_note_header {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
 }
 
-.div_todo_importance {
+.div_note_importance {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
 }
 
-.div_todo_content {
+.div_note_content {
     grid-column: 2 / span 2;
     grid-row: 2 / 3;
 }
 
-.div_todo_edit {
+.div_note_edit {
     grid-column: 4 / 5;
     grid-row: 1 / span 2;
 }
 
 /* Elements */
-.txt_todo_content {
+.txt_note_content {
     width: 100%;
-    disabled
 }
 
 /* Icons */
@@ -107,7 +207,7 @@ h1 {
     line-height: 1;
 }
 
-.fas::before {
+.fas::before, .fas::after {
     display: inline-block;
     font-style: normal;
     font-variant: normal;
