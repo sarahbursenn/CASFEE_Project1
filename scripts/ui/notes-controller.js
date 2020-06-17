@@ -1,62 +1,57 @@
 import {DateFormatter} from '../bl/date-formatter.js';
+import {Note} from '../bl/note.js';
+import {Cookies} from '../utils/cookies.js';
 
-const id_btn_div_sort_by_finished = 'btn_div_sort_by_finished';
-const id_btn_div_sort_by_created = 'btn_div_sort_by_created';
-const id_btn_div_sort_by_importance = 'btn_div_sort_by_importance';
-const id_btn_div_show_finished = 'btn_div_show_finished';
+const id_btn_span_sort_by_finished = 'btn_span_sort_by_finished';
+const id_btn_span_sort_by_created = 'btn_span_sort_by_created';
+const id_btn_span_sort_by_importance = 'btn_span_sort_by_importance';
+const id_btn_span_show_finished = 'btn_span_show_finished';
 const class_sort_asc = 'btn_sort_num_asc';
 const class_sort_desc = 'btn_sort_num_desc';
-const class_div_sort_icon = 'btn_div_right';
+const class_div_sort_icon = 'btn_span_right';
 const class_btn_show_on = 'btn_show_on';
 const class_btn_show_off = 'btn_show_off';
 
 export class NotesController {
-    constructor(notesStorage, notesService) {
+    constructor(notesStorage) {
         this.notesStorage = notesStorage;
-        this.notesService = notesService;
-
-        Handlebars.registerHelper("formatDate", function (date) {
-            return new DateFormatter(date).format();
-        });
-
-        Handlebars.registerHelper("blubber", function (number) {
-            let i = 0;
-            let result = "";
-            while (i < number) {
-                result += "!";
-                i++;
-            }
-            return result;
-        });
 
         this.notesTemplate = Handlebars.compile(document.getElementById('note-entry-template').innerHTML);
         this.noteComponent = document.getElementById('div_note_components');
 
+        this.body = document.getElementsByTagName('body')[0];
+
+        this.slctStyle = document.getElementById('slct_style');
         this.newNoteButton = document.getElementById('btn_new_note');
         this.btnSortByFishedOn = document.getElementById('btn_sort_by_finished');
         this.btnSortByCreatedOn = document.getElementById('btn_sort_by_created');
         this.btnSortByImportance = document.getElementById('btn_sort_importance');
         this.btnShowFinished = document.getElementById('btn_show_finished');
+        this.divNoteComponents = document.getElementById('div_note_components');
+
+        this.divPopUp = document.getElementById('div_note_popup');
+        this.divFormHeader = document.getElementById('div_form_header');
+        this.inptFormCreatedOn = document.getElementById('form_inpt_created_on');
+        this.btnFormOk = document.getElementById('form_btn_ok');
+        this.btnFormCancel = document.getElementById('form_btn_cancel');
     }
 
-    showNotes(notes) {
-        if (!notes) {
-            notes = this.notesService.notes;
-        }
+    showNotes(orderBy, filterBy) {
+        const notes = this.notesStorage.getNotes(orderBy, filterBy);
         this.noteComponent.innerHTML = this.notesTemplate({notes: notes});
     }
 
     initEventHandler() {
         this.btnSortByFishedOn.addEventListener('click', (event) => {
-            this.sortBtnClicked(id_btn_div_sort_by_finished);
+            this.sortBtnClicked(id_btn_span_sort_by_finished);
         });
 
         this.btnSortByCreatedOn.addEventListener('click', (event) => {
-            this.sortBtnClicked(id_btn_div_sort_by_created);
+            this.sortBtnClicked(id_btn_span_sort_by_created);
         });
 
         this.btnSortByImportance.addEventListener('click', (event) => {
-            this.sortBtnClicked(id_btn_div_sort_by_importance);
+            this.sortBtnClicked(id_btn_span_sort_by_importance);
         });
 
         this.btnShowFinished.addEventListener('click', (event) => {
@@ -64,48 +59,149 @@ export class NotesController {
         });
 
         this.newNoteButton.addEventListener('click', (event) => {
+            this.openForm('Neue Notiz...');
+        });
+
+        this.slctStyle.addEventListener('change', (event) => {
+            const newStyle = this.slctStyle.value;
+            this.setNewStyle(newStyle);
+            this.writeCookies(CookieEnum.style, newStyle);
+        });
+
+        this.divNoteComponents.addEventListener('click', (event) => {
+            const noteId = event.target.dataset.noteId;
+            const note = this.notesStorage.getNoteById(noteId);
+            this.fromBeanToForm(note);
+            this.openForm(false);
+        });
+
+        this.btnFormOk.addEventListener('click', (event) => {
+            event.preventDefault();
+            const note = this.fromFormToBean();
+            if (note.id) {
+                this.notesStorage.updateNote(note);
+            } else {
+                this.notesStorage.addNote(note);
+            }
+            this.divPopUp.style.display = "none";
+            this.showNotes(this.getOrderByInfo(), this.isShowFinishedOn());
+        });
+
+        this.btnFormCancel.addEventListener('click', (event) => {
+            this.divPopUp.style.display = "none";
         });
     }
 
 
     renderView() {
-        this.showNotes();
+        this.applyCookies();
+        this.showNotes(this.getOrderByInfo(), this.isShowFinishedOn());
     }
 
     action() {
         this.initEventHandler();
-        this.notesService.loadData();
         this.renderView();
     }
 
     /*
         Helper Methods
      */
+    getElementById(elementId) {
+        return document.getElementById(elementId);
+    }
+
     elementIdAndSortDirectionToEnum(elementId, sortDirection) {
         let sortBy = 0;
-        if (elementId.includes('finished')) {
-            sortBy += SortEnum.byFinished;
-        } else if (elementId.includes('created')) {
-            sortBy += SortEnum.byCreated;
-        } else if (elementId.includes('importance')) {
-            sortBy += SortEnum.byImportance;
+        if (elementId.includes(id_btn_span_sort_by_finished)) {
+            sortBy += SortEnum.btn_span_sort_by_finished;
+        } else if (elementId.includes(id_btn_span_sort_by_created)) {
+            sortBy += SortEnum.btn_span_sort_by_created;
+        } else if (elementId.includes(id_btn_span_sort_by_importance)) {
+            sortBy += SortEnum.btn_span_sort_by_importance;
         }
 
-        if (sortDirection.includes('asc')) {
-            sortBy += SortEnum.asc;
-        } else if (sortDirection.includes('desc')) {
-            sortBy += SortEnum.desc;
+        if (sortDirection.includes(class_sort_asc)) {
+            sortBy += SortEnum.btn_sort_num_asc;
+        } else if (sortDirection.includes(class_sort_desc)) {
+            sortBy += SortEnum.btn_sort_num_desc;
         }
         return sortBy;
     }
 
+    writeCookies(key, value) {
+        document.cookie = `${key}=${value}; expires=${DateFormatter.getDateForCookies()}`;
+    }
+
+    applyCookies() {
+        const cookies = new Cookies(document.cookie);
+
+        // Style
+        this.setNewStyle(cookies.style);
+        this.slctStyle.value = cookies.style;
+
+        // Sort By
+        this.toggleSortIcon(cookies.sortBy[0], cookies.sortBy[1]);
+
+        // Filter By
+        this.toggleShowIcon(!cookies.filterBy);
+    }
+
     /*
-        Methods for Button's Show Icon Handling
+     *    Bean from/to Form
+     */
+    fromBeanToForm(note) {
+        this.getElementById('form_inpt_id').value = note.id;
+        this.getElementById('form_inpt_title').value = note.header;
+        this.getElementById('form_inpt_created_on').value = DateFormatter.dateToHtmlString(note.createdOn);
+        this.getElementById('form_inpt_finished_on').value = DateFormatter.dateToHtmlString(note.finishedOn);
+        this.getElementById('form_slct_importance').value = note.importance;
+        this.getElementById('form_txt_note_text').value = note.noteText;
+    }
+
+    fromFormToBean() {
+        const note = new Note(
+            this.getElementById('form_inpt_id').value,
+            DateFormatter.htmlStringToDate(this.getElementById('form_inpt_created_on').value),
+            DateFormatter.htmlStringToDate(this.getElementById('form_inpt_finished_on').value),
+            this.getElementById('form_inpt_title').value,
+            this.getElementById('form_txt_note_text').value,
+            this.getElementById('form_slct_importance').value);
+        return note;
+    }
+
+
+    /*
+     *   Form Handling
+     */
+    openForm(isNew) {
+        let headerText = 'Notiz bearbeiten...';
+        if (isNew) {
+            this.inptFormCreatedOn.value = DateFormatter.dateToHtmlString(new Date());
+            headerText = 'Neue Notiz...';
+        }
+        this.divFormHeader.innerHTML = `<h2>${headerText}</h2>`;
+        this.divPopUp.style.display = "block";
+    }
+
+    /*
+     *  Methods for Style Handling
+     */
+    setNewStyle(newStyle) {
+        const otherStyles = StyleEnum.getStyles();
+        const bodyClassList = this.body.classList;
+        otherStyles.forEach(val => bodyClassList.remove(val));
+        bodyClassList.add(newStyle);
+    }
+
+    /*
+     *   Methods for Button's Show Icon Handling
      */
 
-    toggleShowIcon() {
-        const divWithShowInfo = document.getElementById(id_btn_div_show_finished);
-        const isShowOn = this.isShowOn(divWithShowInfo);
+    toggleShowIcon(isShowOn = null) {
+        const divWithShowInfo = document.getElementById(id_btn_span_show_finished);
+        if (isShowOn == null) {
+            isShowOn = this.isShowOn(divWithShowInfo);
+        }
         if (isShowOn) {
             divWithShowInfo.classList.remove(class_btn_show_on);
             divWithShowInfo.classList.add(class_btn_show_off);
@@ -121,29 +217,24 @@ export class NotesController {
     }
 
     isShowFinishedOn() {
-        return this.isShowOn(document.getElementById(id_btn_div_show_finished));
+        return this.isShowOn(document.getElementById(id_btn_span_show_finished));
     }
 
-    showBtnClicked(){
-        let element = document.getElementsByClassName(class_sort_asc)[0];
-        let sortBy = 0;
-        if(element){
-            sortBy = this.elementIdAndSortDirectionToEnum(element.id, class_sort_asc);
-        }else{
-            element = document.getElementsByClassName(class_sort_desc)[0];
-            sortBy = this.elementIdAndSortDirectionToEnum(element.id, class_sort_desc);
-        }
+    showBtnClicked() {
         const filterBy = this.toggleShowIcon();
-        this.showNotes(this.notesStorage.getNotes(sortBy, filterBy));
+        this.showNotes(this.getOrderByInfo(), filterBy);
+        this.writeCookies(CookieEnum.filterBy, filterBy);
     }
 
     /*
-        Methods for Button's Sort Icon Handling
+     *   Methods for Button's Sort Icon Handling
      */
 
-    toggleSortIcon(elementId) {
+    toggleSortIcon(elementId, sortDirection = null) {
         const divWithSortInfo = document.getElementById(elementId);
-        const sortDirection = this.findOutSortDirection(divWithSortInfo);
+        if (!sortDirection) {
+            sortDirection = this.findOutSortDirection(divWithSortInfo);
+        }
         this.removeSortIcons();
         divWithSortInfo.classList.add(sortDirection);
         return sortDirection;
@@ -163,8 +254,24 @@ export class NotesController {
             .forEach(el => el.classList.remove(class_sort_asc, class_sort_desc));
     }
 
+    getOrderByInfo() {
+        let element = document.getElementsByClassName(class_sort_asc)[0];
+        let orderBy = SortEnum.btn_span_sort_by_created_asc;
+        if (element) {
+            orderBy = this.elementIdAndSortDirectionToEnum(element.id, class_sort_asc);
+        } else {
+            element = document.getElementsByClassName(class_sort_desc)[0];
+            if (element) {
+                orderBy = this.elementIdAndSortDirectionToEnum(element.id, class_sort_desc);
+            }
+        }
+        return orderBy;
+    }
+
     sortBtnClicked(elementId) {
         const sortDirection = this.toggleSortIcon(elementId);
-        this.showNotes(this.notesStorage.getNotes(this.elementIdAndSortDirectionToEnum(elementId, sortDirection), this.isShowFinishedOn()));
+        const sortBy = this.elementIdAndSortDirectionToEnum(elementId, sortDirection);
+        this.showNotes(sortBy, this.isShowFinishedOn());
+        this.writeCookies(CookieEnum.sortBy, sortBy);
     }
 }

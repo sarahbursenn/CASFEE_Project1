@@ -21,17 +21,17 @@ export class Note {
 
     static getSortFunction(sortByEnum){
         switch (sortByEnum) {
-            case SortEnum.byFinishedAsc:
+            case SortEnum.btn_span_sort_by_finished_asc:
                 return Note.compareFinishedOnAsc;
-            case SortEnum.byFinishedDesc:
+            case SortEnum.btn_span_sort_by_finished_desc:
                 return Note.compareFinishedOnDesc;
-            case SortEnum.byCreatedAsc:
+            case SortEnum.btn_span_sort_by_created_asc:
                 return Note.compareCreatedOnAsc;
-            case SortEnum.byCreatedDesc:
+            case SortEnum.btn_span_sort_by_created_desc:
                 return Note.compareCreatedOnDesc;
-            case SortEnum.byImportanceAsc:
+            case SortEnum.btn_span_sort_by_importance_asc:
                 return Note.compareImportanceAsc;
-            case SortEnum.byImportanceDesc:
+            case SortEnum.btn_span_sort_by_importance_desc:
                 return Note.compareImportanceDesc;
             default:
                 throw Error("Wrong Sorting Function");
