@@ -1,48 +1,54 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Notez</title>
 
     <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-<h1>Notez</h1>
+<body class="light">
 <div id="div_content" class="div_content">
-    <div id="div_control_components" class="div_control_components">
-        <button class="btn_new_note" id="btn_new_note" name="new_note" type="button"><span class="fas fa-plus"></span>
-        </button>
+    <div id="div_header" class="div_header">
+        <h1>Notez</h1>
     </div>
 
-    <div id="div_style_components" class="div_style_components">
+    <div id="div_style_components" class="fas div_style_components">
         <select class="slct_style" id="slct_style" name="style">
-            <option value="dark">Dark-Mode</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
         </select>
     </div>
 
+    <div id="div_control_components" class="div_control_components">
+        <button id="btn_new_note" class="btn btn_action" name="new_note" type="button">
+            <span class="fas fa-plus"></span>
+        </button>
+    </div>
+
+
     <div id="div_sort_components_finished" class="div_sort_components div_sort_components_finished">
         <button id="btn_sort_by_finished" class="btn btn_sort" name="sort_by_finished" type="button">
-            <div class="btn_div_left">erledigt am</div>
-            <div id="btn_div_sort_by_finished" class="btn_div_right fas btn_sort_num_asc"></div>
+            <span class="btn_span_left">erledigt am</span>
+            <span id="btn_span_sort_by_finished" class="btn_span_right fas btn_sort_num_asc"></span>
         </button>
     </div>
     <div id="div_sort_components_created" class="div_sort_components div_sort_components_created">
         <button id="btn_sort_by_created" class="btn btn_sort" name="sort_by_created" type="button">
-            <div class="btn_div_left">erstellt am</div>
-                <div id="btn_div_sort_by_created" class="btn_div_right fas"></div>
+            <span class="btn_span_left">erstellt am</span>
+            <span id="btn_span_sort_by_created" class="btn_span_right fas"></span>
         </button>
     </div>
     <div id="div_sort_components_importance" class="div_sort_components div_sort_components_importance">
         <button id="btn_sort_importance" class="btn btn_sort" name="sort_by_importance" type="button">
-            <div class="btn_div_left">Wichtigkeit</div>
-            <div id="btn_div_sort_by_importance" class="btn_div_right fas"></div>
+            <span class="btn_span_left">Wichtigkeit</span>
+            <span id="btn_span_sort_by_importance" class="btn_span_right fas"></span>
         </button>
     </div>
 
     <div id="div_display_components" class="div_display_components">
         <button class="btn btn_show" id="btn_show_finished" name="show_finished" type="button">
-            <div class="btn_div_left">Erledigte anzeigen</div>
-            <div id="btn_div_show_finished" class="btn_div_right fas btn_show_on"></div>
+            <span class="btn_span_left">Erledigte anzeigen</span>
+            <span id="btn_span_show_finished" class="btn_span_right fas btn_show_on"></span>
         </button>
     </div>
 
@@ -51,40 +57,77 @@
     </div>
 </div>
 
+<!-- Pop-Up -->
+<div id="div_note_popup" class="div_note_popup">
+    <form class="form_note_action" method="post">
+        <div id="div_form_header" class="div_form_header">
+            <h2>Notiz</h2>
+        </div>
+
+        <input id="form_inpt_id" class="inpt" type="text" name="id" disabled hidden>
+
+        <label id="form_label_title" class="form_label" for="form_inpt_title"><b>Titel</b></label>
+        <input id="form_inpt_title" class="form_element inpt" type="text" name="title" required>
+
+        <label id="form_label_created_on" class="form_label" for="form_inpt_created_on"><b>Erstellt am</b></label>
+        <input id="form_inpt_created_on" class="form_element inpt" type="date" name="created_on" disabled>
+
+        <label id="form_label_finished_on" class="form_label" for="form_inpt_finished_on"><b>Erledigt am</b></label>
+        <input id="form_inpt_finished_on" class="form_element inpt" type="date" name="finished_on">
+
+        <label id="form_label_importance" class="form_label" for="form_slct_importance"><b>Wichtigkeit</b></label>
+        <select id="form_slct_importance" class="form_element slct" name="importance">
+            <option value="1">!</option>
+            <option value="2">!!</option>
+            <option value="3">!!!</option>
+        </select>
+
+        <label id="form_label_note_text" class="form_label" for="form_txt_note_text"><b>Notiz</b></label>
+        <textarea id="form_txt_note_text" class="form_element txt form_txt" name="noteText"></textarea>
+
+        <button id="form_btn_ok" class="btn btn_action" type="submit">Speichern</button>
+        <button id="form_btn_cancel" class="btn btn_cancel" type="button">Abbrechen</button>
+    </form>
+</div>
+
 <!-- Handlebars Template for notes -->
 <script id="note-entry-template" type="text/x-handlebars-template">
     {{#each notes}}
         <div class="div_note">
-            <div class="div_note_created">
-                Erstellt am: {{formatDate createdOn}}
-            </div>
-            <div class="div_note_finished">
-            <input name="is_finished" type="checkbox"
-                {{#if finishedOn}}
-                   checked> erledigt am: [{{formatDate finishedOn}}]
-                {{else}}
-                    >
-                {{/if}}
-            </div>
-            <div class="div_note_header">
-                {{header}}
-            </div>
-            <div class="div_note_importance">
-                {{blubber importance}}
-            </div>
-            <div class="div_note_content">
-                <textarea class="txt_note_content" disabled>{{noteText}}</textarea>
+            <div class="div_note_details">
+                <div class="div_note_header">
+                    {{header}}
+                </div>
+
+                <div class="div_note_dates">
+                    {{formatDate createdOn}}<br>
+                    {{#if finishedOn}}
+                        {{formatDate finishedOn}}
+                    {{else}}
+                        -
+                    {{/if}}
+                </div>
+
+                <div class="div_note_importance">
+                    {{renderImportance importance}}
+                </div>
+                <div class="div_note_content">
+                    {{{renderNoteText noteText}}}
+                </div>
             </div>
             <div class="div_note_edit">
-                <button name="note_edit" type="button"><span class="fas fa-pencil"></span></button>
+                <button class="btn btn_action btn_note_edit" name="btn_note_edit" type="button" data-note-id="{{id}}">
+                    <span data-note-id="{{id}}" class="fas fa-pencil"></span>
+                </button>
             </div>
         </div>
     {{/each}}
 </script>
 
 <!-- Scripts -->
-<script src="scripts/utils.js" defer></script>
+<script src="scripts/utils/shared.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.js" defer></script>
+<script type="module" src="scripts/utils/handlebar-helpers.js" defer></script>
 <script src="scripts/bootstrapper-index.js" type="module" defer></script>
 </body>
 </html>
