@@ -3,7 +3,16 @@ export class DateFormatter {
     }
 
     static dateToHtmlString(date) {
-        return date.toISOString().substr(0, 10);
+        if (date) {
+            const ret = `${date.getFullYear()}-${DateFormatter.getTwoDigitNumber(date.getMonth() + 1)}-${DateFormatter.getTwoDigitNumber(date.getDate())}`;
+            console.log(ret);
+            return ret;
+        }
+        return null;
+    }
+
+    static getTwoDigitNumber(number) {
+        return ("00" + number).slice(-2);
     }
 
     static htmlStringToDate(htmlString) {

@@ -83,12 +83,12 @@ export class NotesController {
             } else {
                 this.notesStorage.addNote(note);
             }
-            this.divPopUp.style.display = "none";
+            this.closeForm();
             this.showNotes(this.getOrderByInfo(), this.isShowFinishedOn());
         });
 
         this.btnFormCancel.addEventListener('click', (event) => {
-            this.divPopUp.style.display = "none";
+            this.closeForm();
         });
     }
 
@@ -181,6 +181,13 @@ export class NotesController {
         }
         this.divFormHeader.innerHTML = `<h2>${headerText}</h2>`;
         this.divPopUp.style.display = "block";
+    }
+
+    closeForm(){
+        this.divPopUp.style.display = "none";
+
+        // clear div
+        this.fromBeanToForm(Note.getEmptyNote());
     }
 
     /*

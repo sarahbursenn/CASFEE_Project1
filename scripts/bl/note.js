@@ -19,7 +19,7 @@ export class Note {
         }
     }
 
-    static getSortFunction(sortByEnum){
+    static getSortFunction(sortByEnum) {
         switch (sortByEnum) {
             case SortEnum.btn_span_sort_by_finished_asc:
                 return Note.compareFinishedOnAsc;
@@ -37,6 +37,10 @@ export class Note {
                 throw Error("Wrong Sorting Function");
 
         }
+    }
+
+    static getEmptyNote() {
+        return new Note("", "", "", "", "", 1);
     }
 
     static compareFinishedOnAsc(n1, n2) {
