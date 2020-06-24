@@ -36,8 +36,8 @@ export class NotesController {
         this.btnFormCancel = document.getElementById('form_btn_cancel');
     }
 
-    showNotes(orderBy, filterBy) {
-        const notes = this.notesStorage.getNotes(orderBy, filterBy);
+    async showNotes(orderBy, filterBy) {
+        const notes = await this.notesStorage.getAllNotes(orderBy, filterBy);
         this.noteComponent.innerHTML = this.notesTemplate({notes: notes});
     }
 
@@ -68,9 +68,9 @@ export class NotesController {
             this.writeCookies(CookieEnum.style, newStyle);
         });
 
-        this.divNoteComponents.addEventListener('click', (event) => {
+        this.divNoteComponents.addEventListener('click', async (event) =>  {
             const noteId = event.target.dataset.noteId;
-            const note = this.notesStorage.getNoteById(noteId);
+            const note = await this.notesStorage.getNote(noteId);
             this.fromBeanToForm(note);
             this.openForm(false);
         });
@@ -78,10 +78,10 @@ export class NotesController {
         this.btnFormOk.addEventListener('click', (event) => {
             event.preventDefault();
             const note = this.fromFormToBean();
-            if (note.id) {
+            if (note._id) {
                 this.notesStorage.updateNote(note);
             } else {
-                this.notesStorage.addNote(note);
+                this.notesStorage.createNote(note);
             }
             this.closeForm();
             this.showNotes(this.getOrderByInfo(), this.isShowFinishedOn());
@@ -150,8 +150,8 @@ export class NotesController {
      *    Bean from/to Form
      */
     fromBeanToForm(note) {
-        this.getElementById('form_inpt_id').value = note.id;
-        this.getElementById('form_inpt_title').value = note.header;
+        this.getElementById('form_inpt_id').value = note._id;
+        this.getElementById('form_inpt_title').value = note.title;
         this.getElementById('form_inpt_created_on').value = DateFormatter.dateToHtmlString(note.createdOn);
         this.getElementById('form_inpt_finished_on').value = DateFormatter.dateToHtmlString(note.finishedOn);
         this.getElementById('form_slct_importance').value = note.importance;
@@ -160,12 +160,16 @@ export class NotesController {
 
     fromFormToBean() {
         const note = new Note(
-            this.getElementById('form_inpt_id').value,
             DateFormatter.htmlStringToDate(this.getElementById('form_inpt_created_on').value),
             DateFormatter.htmlStringToDate(this.getElementById('form_inpt_finished_on').value),
             this.getElementById('form_inpt_title').value,
             this.getElementById('form_txt_note_text').value,
             this.getElementById('form_slct_importance').value);
+
+        const id = this.getElementById('form_inpt_id').value;
+        if(id){
+            note._id = id;
+        }
         return note;
     }
 

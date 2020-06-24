@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Notez</title>
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="light">
 <div id="div_content" class="div_content">
@@ -96,7 +96,7 @@
         <div class="div_note">
             <div class="div_note_details">
                 <div class="div_note_header">
-                    {{header}}
+                    {{title}}
                 </div>
 
                 <div class="div_note_dates">
@@ -116,8 +116,8 @@
                 </div>
             </div>
             <div class="div_note_edit">
-                <button class="btn btn_action btn_note_edit" name="btn_note_edit" type="button" data-note-id="{{id}}">
-                    <span data-note-id="{{id}}" class="fas fa-pencil"></span>
+                <button class="btn btn_action btn_note_edit" name="btn_note_edit" type="button" data-note-id="{{_id}}">
+                    <span data-note-id="{{_id}}" class="fas fa-pencil"></span>
                 </button>
             </div>
         </div>
@@ -125,9 +125,9 @@
 </script>
 
 <!-- Scripts -->
-<script src="scripts/utils/shared.js" defer></script>
+<script src="../scripts/utils/shared.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.js" defer></script>
-<script type="module" src="scripts/utils/handlebar-helpers.js" defer></script>
-<script src="scripts/bootstrapper-index.js" type="module" defer></script>
+<script type="module" src="../scripts/utils/handlebar-helpers.js" defer></script>
+<script src="../scripts/bootstrapper-index.js" type="module" defer></script>
 </body>
 </html>

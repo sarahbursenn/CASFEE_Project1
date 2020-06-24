@@ -3,9 +3,11 @@ export class DateFormatter {
     }
 
     static dateToHtmlString(date) {
+        if(typeof date === 'string'){
+            date = new Date(date);
+        }
         if (date) {
             const ret = `${date.getFullYear()}-${DateFormatter.getTwoDigitNumber(date.getMonth() + 1)}-${DateFormatter.getTwoDigitNumber(date.getDate())}`;
-            console.log(ret);
             return ret;
         }
         return null;
@@ -23,6 +25,9 @@ export class DateFormatter {
     }
 
     static format(date) {
+        if(typeof date === 'string'){
+            date = new Date(date);
+        }
         if (DateFormatter.isToday(date)) {
             return "Heute";
         }

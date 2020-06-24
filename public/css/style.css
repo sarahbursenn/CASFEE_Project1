@@ -8,7 +8,7 @@
     --font-family-header: 'Fredericka the Great', sans-serif;
     --font-family-content: 'Raleway', sans-serif;
 
-    --background-image: url('./images/Hintergrund.jpg');
+    --background-image: url('../images/background.jpg');
 
     --light-background_dark: rgba(175, 238, 238, 1);
     --light-background_light: rgba(240, 255, 255, 1);
@@ -99,6 +99,10 @@ body.dark, .dark .div_note_popup {
 .dark .div_note_popup {
     border-color: var(--dark-color-light);
     color: white;
+}
+
+.dark .div_form_header {
+    color: black;
 }
 
 /* Buttons */

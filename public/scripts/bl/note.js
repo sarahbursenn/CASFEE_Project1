@@ -1,9 +1,8 @@
 export class Note {
-    constructor(id, createdOn, finishedOn, header, noteText, importance) {
-        this.id = id;
+    constructor(createdOn, finishedOn, title, noteText, importance) {
         this.createdOn = this.getSafeDate(createdOn);
         this.finishedOn = this.getSafeDate(finishedOn);
-        this.header = header;
+        this.title = title;
         this.noteText = noteText;
         this.importance = importance;
     }
@@ -40,7 +39,7 @@ export class Note {
     }
 
     static getEmptyNote() {
-        return new Note("", "", "", "", "", 1);
+        return new Note("", "", "", "", 1);
     }
 
     static compareFinishedOnAsc(n1, n2) {
