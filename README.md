@@ -1,4 +1,10 @@
 # CASFEE Project1 von Sarah Bur
+
+## Install und Start
+npm install<br>
+npm start
+
+## Inhalt und Funktionalität
 - <b>controller > notes-controller-backen.js</b><br>wird vom Notes-Router aufgerufen, ruft den DB-Service auf und setzt die Resultate als JSON in die Response)
 
 - <b>data > notes.db</b><br>DB-File
