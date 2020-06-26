@@ -1,6 +1,6 @@
 import {DateFormatter} from '../bl/date-formatter.js';
 import {Note} from '../bl/note.js';
-import {Cookies} from '../utils/cookies.js';
+import {UserSettings} from '../utils/user-settings.js';
 
 const id_btn_span_sort_by_finished = 'btn_span_sort_by_finished';
 const id_btn_span_sort_by_created = 'btn_span_sort_by_created';
@@ -65,10 +65,10 @@ export class NotesController {
         this.slctStyle.addEventListener('change', (event) => {
             const newStyle = this.slctStyle.value;
             this.setNewStyle(newStyle);
-            this.writeCookies(CookieEnum.style, newStyle);
+            UserSettings.storeStyle(newStyle);
         });
 
-        this.divNoteComponents.addEventListener('click', async (event) =>  {
+        this.divNoteComponents.addEventListener('click', async (event) => {
             const noteId = event.target.dataset.noteId;
             const note = await this.notesStorage.getNote(noteId);
             this.fromBeanToForm(note);
@@ -94,7 +94,7 @@ export class NotesController {
 
 
     renderView() {
-        this.applyCookies();
+        this.applyUserSettings();
         this.showNotes(this.getOrderByInfo(), this.isShowFinishedOn());
     }
 
@@ -128,22 +128,18 @@ export class NotesController {
         return sortBy;
     }
 
-    writeCookies(key, value) {
-        document.cookie = `${key}=${value}; expires=${DateFormatter.getDateForCookies()}`;
-    }
-
-    applyCookies() {
-        const cookies = new Cookies(document.cookie);
-
+    applyUserSettings() {
         // Style
-        this.setNewStyle(cookies.style);
-        this.slctStyle.value = cookies.style;
+        const style = UserSettings.getStyle();
+        this.setNewStyle(style);
+        this.slctStyle.value = style;
 
         // Sort By
-        this.toggleSortIcon(cookies.sortBy[0], cookies.sortBy[1]);
+        const sortDirection = UserSettings.getSortBy();
+        this.toggleSortIcon(sortDirection[0], sortDirection[1]);
 
         // Filter By
-        this.toggleShowIcon(!cookies.filterBy);
+        this.toggleShowIcon(!UserSettings.getFilterBy());
     }
 
     /*
@@ -167,7 +163,7 @@ export class NotesController {
             this.getElementById('form_slct_importance').value);
 
         const id = this.getElementById('form_inpt_id').value;
-        if(id){
+        if (id) {
             note._id = id;
         }
         return note;
@@ -187,7 +183,7 @@ export class NotesController {
         this.divPopUp.style.display = "block";
     }
 
-    closeForm(){
+    closeForm() {
         this.divPopUp.style.display = "none";
 
         // clear div
@@ -234,7 +230,7 @@ export class NotesController {
     showBtnClicked() {
         const filterBy = this.toggleShowIcon();
         this.showNotes(this.getOrderByInfo(), filterBy);
-        this.writeCookies(CookieEnum.filterBy, filterBy);
+        UserSettings.storeFilterBy(filterBy);
     }
 
     /*
@@ -283,6 +279,6 @@ export class NotesController {
         const sortDirection = this.toggleSortIcon(elementId);
         const sortBy = this.elementIdAndSortDirectionToEnum(elementId, sortDirection);
         this.showNotes(sortBy, this.isShowFinishedOn());
-        this.writeCookies(CookieEnum.sortBy, sortBy);
+        UserSettings.storeSortBy(sortBy);
     }
 }
